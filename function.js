@@ -12,15 +12,16 @@ const mobileMenuBtn = document.querySelector('.mobileMenuBtn')
 
 async function shorten(){
         if(navigator.onLine){
-                let longLink = inputForm.value;
-                const result = await fetch(`https://api.shrtco.de/v2/shorten?url=${longLink}`)
-                const shortLink = await result.json();   
-                if(shortLink.ok){
-                    shortLinkTag.textContent = shortLink.result.short_link2
+                let url = inputForm.value;
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`); 
+                if(response.ok){
+                    const data = await response.text();
+                    shortLinkTag.textContent = data
+                    console.log(data)
                     if(shortened.classList.contains('hidden')){shortened.classList.toggle('hidden')}else{}
                     copyButton.textContent = 'Copy'
                     copyButton.style.color = 'white'
-                    longLinkTag.textContent = longLink 
+                    longLinkTag.textContent = url 
                     inputForm.value = ''
                     errorMessage.classList.add('hidden')
                     inputForm.classList.remove('error')
@@ -30,6 +31,7 @@ async function shorten(){
                 }
         }else{}
 }
+
 shortenButton.addEventListener('click',shorten)
 
 copyButton.onclick = ()=>{
